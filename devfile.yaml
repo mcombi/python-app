@@ -30,11 +30,6 @@ components:
           value: /projects
         - name: SHELL
           value: /bin/bash
-        - name: GIT_CONFIG_GLOBAL
-          value: /git-credentials/gitconfig
-      volumeMounts:
-        - name: git-credentials-storage
-          path: /git-credentials
       command:
         - sleep
         - infinity
@@ -43,3 +38,4 @@ components:
           targetPort: 8080
           exposure: public
           protocol: http
+
