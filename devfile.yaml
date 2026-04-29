@@ -1,0 +1,67 @@
+schemaVersion: 2.2.0
+metadata:
+  name: python-dev-environment
+  displayName: Python dev environment
+  version: 1.0.0
+attributes:
+  .vscode/extensions.json: |
+    {
+      "recommendations": [
+        "redhat.vscode-yaml"
+      ]
+    }
+projects:
+  - name: python-app
+    git:
+      remotes:
+        origin: https://github.com/mcombi/python-app.git
+components:
+  - name: git-credentials-storage
+    volume:
+      size: 1Gi
+  - name: python-tools
+    container:
+      image: registry.access.redhat.com/ubi9/python-311:latest
+      memoryLimit: 1Gi
+      memoryRequest: 512Mi
+      mountSources: true
+      env:
+        - name: HOME
+          value: /projects
+        - name: SHELL
+          value: /bin/bash
+        - name: GIT_CONFIG_GLOBAL
+          value: /git-credentials/gitconfig
+      volumeMounts:
+        - name: git-credentials-storage
+          path: /git-credentials
+      command:
+        - sleep
+        - infinity
+      endpoints:
+        - name: http-python
+          targetPort: 8080
+          exposure: public
+          protocol: http
+commands:
+  - id: setup-persistent-git-credentials
+    exec:
+      component: python-tools
+      commandLine: |
+        bash -c '
+        mkdir -p /git-credentials && chmod 700 /git-credentials
+        if ! command -v git >/dev/null 2>&1; then
+          timeout 120 bash -c "(command -v dnf >/dev/null && dnf install -y git) || (command -v microdnf >/dev/null && microdnf install -y git)" 2>/dev/null || true
+        fi
+        if command -v git >/dev/null 2>&1; then
+          if [ ! -f /git-credentials/gitconfig ] || ! grep -q credential.helper /git-credentials/gitconfig 2>/dev/null; then
+            git config --file /git-credentials/gitconfig credential.helper "store --file /git-credentials/stored-credentials"
+          fi
+        fi
+        touch /git-credentials/stored-credentials
+        chmod 600 /git-credentials/stored-credentials 2>/dev/null || true
+        exit 0
+        '
+events:
+  postStart:
+    - setup-persistent-git-credentials
