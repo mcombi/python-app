@@ -43,22 +43,3 @@ components:
           targetPort: 8080
           exposure: public
           protocol: http
-commands:
-  - id: setup-persistent-git-credentials
-    exec:
-      component: python-tools
-      commandLine: |
-        bash -c '
-        mkdir -p /git-credentials && chmod 700 /git-credentials
-        if ! command -v git >/dev/null 2>&1; then
-          timeout 120 bash -c "(command -v dnf >/dev/null && dnf install -y git) || (command -v microdnf >/dev/null && microdnf install -y git)" 2>/dev/null || true
-        fi
-        if command -v git >/dev/null 2>&1; then
-          if [ ! -f /git-credentials/gitconfig ] || ! grep -q credential.helper /git-credentials/gitconfig 2>/dev/null; then
-            git config --file /git-credentials/gitconfig credential.helper "store --file /git-credentials/stored-credentials"
-          fi
-        fi
-        touch /git-credentials/stored-credentials
-        chmod 600 /git-credentials/stored-credentials 2>/dev/null || true
-        exit 0
-        '
