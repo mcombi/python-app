@@ -3,13 +3,6 @@ metadata:
   name: python-dev-environment-matte
   displayName: Matteo's Python dev environment
   version: 1.0.0
-attributes:
-  ".vscode/extensions.json": |
-    {
-      "recommendations": [
-        "redhat.vscode-yaml"
-      ]
-    }
 projects:
   - name: python-app
     git:
