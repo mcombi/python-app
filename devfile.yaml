@@ -4,7 +4,7 @@ metadata:
   displayName: Python dev environment
   version: 1.0.0
 attributes:
-  .vscode/extensions.json: |
+  ".vscode/extensions.json": |
     {
       "recommendations": [
         "redhat.vscode-yaml"
@@ -21,7 +21,7 @@ components:
       size: 1Gi
   - name: python-tools
     container:
-      image: registry.access.redhat.com/ubi9/python-311:latest
+      image: quay.io/mcombi/python-dev-spaces:1.0 
       memoryLimit: 1Gi
       memoryRequest: 512Mi
       mountSources: true
