@@ -1,7 +1,7 @@
 schemaVersion: 2.2.0
 metadata:
-  name: python-dev-environment
-  displayName: Python dev environment
+  name: python-dev-environment-matte
+  displayName: Matteo's Python dev environment
   version: 1.0.0
 attributes:
   ".vscode/extensions.json": |
@@ -16,10 +16,7 @@ projects:
       remotes:
         origin: https://github.com/mcombi/python-app.git
 components:
-  - name: git-credentials-storage
-    volume:
-      size: 1Gi
-  - name: python-tools
+  - name: python-tools-matteo
     container:
       image: quay.io/mcombi/python-dev-spaces:1.0 
       memoryLimit: 1Gi
