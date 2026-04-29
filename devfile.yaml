@@ -62,6 +62,3 @@ commands:
         chmod 600 /git-credentials/stored-credentials 2>/dev/null || true
         exit 0
         '
-events:
-  postStart:
-    - setup-persistent-git-credentials
